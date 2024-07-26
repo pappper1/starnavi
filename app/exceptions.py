@@ -1,0 +1,50 @@
+from fastapi import HTTPException, status
+
+
+class BaseException(HTTPException):
+	status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+	detail = "Internal Server Error"
+
+	def __init__(self):
+		super().__init__(status_code=self.status_code, detail=self.detail)
+
+
+class ExpiredTokenException(BaseException):
+
+	status_code=status.HTTP_401_UNAUTHORIZED
+	detail="Expired token"
+
+
+class TokenAbsentException(BaseException):
+
+	status_code=status.HTTP_401_UNAUTHORIZED
+	detail="Token is absent"
+
+
+class IncorrectTokenFormatException(BaseException):
+
+	status_code=status.HTTP_401_UNAUTHORIZED
+	detail="Incorrect token format"
+
+
+class UserIsNotPresentException(BaseException):
+
+	status_code=status.HTTP_401_UNAUTHORIZED
+
+
+class UserAlreadyExistsException(BaseException):
+
+	status_code=status.HTTP_409_CONFLICT
+	detail="User already exists"
+
+
+class IncorrectEmailOrPasswordException(BaseException):
+
+	status_code=status.HTTP_401_UNAUTHORIZED
+	detail="Incorrect email or password"
+
+
+class UserNotFoundException(BaseException):
+
+	status_code=status.HTTP_404_NOT_FOUND
+	detail="User not found"
