@@ -48,3 +48,9 @@ class UserNotFoundException(BaseException):
 
 	status_code=status.HTTP_404_NOT_FOUND
 	detail="User not found"
+
+
+class FileNotAnImageException(BaseException):
+
+	status_code=status.HTTP_400_BAD_REQUEST
+	detail="File is not an image"

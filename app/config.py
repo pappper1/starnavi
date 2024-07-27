@@ -21,4 +21,6 @@ class Settings:
 		self.JWT_SECRET_KEY = self.env.str("JWT_SECRET_KEY")
 		self.JWT_ALGORITHM = self.env.str("JWT_ALGORITHM")
 
+		self.OPENAI_KEY = self.env.str("OPENAI_KEY")
+
 settings = Settings()

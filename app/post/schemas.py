@@ -1,5 +1,13 @@
-from pydantic import BaseModel, EmailStr
+from datetime import datetime
+
+from pydantic import BaseModel
+from fastapi import Form
 
 
 class SPost(BaseModel):
-	pass
+	id: int
+	title: str
+	content: str
+	photo_uid: str | None
+	author_id: int
+	created_at: datetime
