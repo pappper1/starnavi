@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16
+    container_name: db
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    env_file:
+      - .env-production
+    ports:
+      - "5433:5433"
+
+  api:
+    build:
+      context: .
+    container_name: api
+    volumes:
+      - apidata:/app
+    env_file:
+      - .env-production
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: ["/starnavi/docker/app.sh"]
+
+volumes:
+    postgresdata:
+    apidata:
