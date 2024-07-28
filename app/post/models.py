@@ -19,7 +19,7 @@ class Post(Base):
 	is_blocked = Column(Boolean, default=False, nullable=False)
 	created_at = Column(DateTime, default=datetime.now(), nullable=False)
 
-	author = relationship("User", back_populates="posts")
+	author = relationship("User", back_populates="posts", lazy="joined")
 	comments = relationship(
 		"Comment", back_populates="post", cascade="all, delete-orphan"
 	)
