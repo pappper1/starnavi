@@ -11,6 +11,7 @@ class SPost(BaseModel):
 	content: str
 	photo_uid: str | None
 	author_id: int
+	is_blocked: bool
 	created_at: datetime
 
 

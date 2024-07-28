@@ -7,7 +7,7 @@ from app.user.router import router as user_router
 from app.post.router import router as post_router
 from app.post.comment.router import router as comment_router
 
-app = FastAPI()
+app = FastAPI(openapi_prefix="/api")
 
 app.include_router(user_router)
 app.include_router(post_router)

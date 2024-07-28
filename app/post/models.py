@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import JSON, Column, Computed, DateTime, ForeignKey, Integer, String
+from sqlalchemy import JSON, Column, Computed, DateTime, ForeignKey, Integer, String, \
+	Boolean
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -15,6 +16,7 @@ class Post(Base):
 	content = Column(String, nullable=False)
 	photo_uid = Column(String, nullable=True)
 	author_id = Column(Integer, ForeignKey("user.id"))
+	is_blocked = Column(Boolean, default=False, nullable=False)
 	created_at = Column(DateTime, default=datetime.now(), nullable=False)
 
 	author = relationship("User", back_populates="posts")
