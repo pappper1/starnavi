@@ -37,5 +37,35 @@ class ChatGPT:
 		else:
 			return response.choices[0].message.content
 
+	async def answer_post_comment(
+			self, post_title: str, post_content: str, comment_content: str
+	) -> str:
+		"""
+		Answers the content
+		:param post_title: The title of the post
+		:param post_content: The content of the post
+		:param comment_content: The content of the comment
+		:return: The AI answer
+		"""
+		prompt = ("I want you to act like a normal social media user. "
+				  "I'll send you the title, content of the post, "
+				  "and content of the comment. "
+				  "You will need to respond to this comment in a relevant way, "
+				  "taking into account the title of the post, "
+				  "the content and the content of the comment. "
+				  "The reply should be in the same language as the comment.")
+		response = await self.client.chat.completions.create(
+			model="gpt-4o-mini",
+			messages=[{
+				"role": "user",
+				"content": f"{prompt}"
+						   f"Post title: {post_title}"
+						   f"Post content: {post_content}"
+						   f"Comment content: {comment_content}"
+			}]
+		)
+
+		return response.choices[0].message.content
+
 
 chat_gpt = ChatGPT()
