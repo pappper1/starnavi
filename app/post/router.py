@@ -21,7 +21,7 @@ router = APIRouter(
 )
 
 
-@router.post("/new")
+@router.post("/create")
 async def create_post(
 		title: str = Form(...),
 		content: str = Form(...),
