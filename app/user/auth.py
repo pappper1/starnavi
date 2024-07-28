@@ -8,8 +8,8 @@ from pydantic import EmailStr
 from app.config import settings
 from app.user.repository import UserRepository
 
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -23,9 +23,7 @@ def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = jsonable_encoder((datetime.now() + timedelta(minutes=30)).timestamp())
     to_encode.update({"expire": expire})
-    encoded_jwt = jwt.encode(
-        to_encode, settings.JWT_SECRET_KEY, settings.JWT_ALGORITHM
-    )
+    encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, settings.JWT_ALGORITHM)
 
     return encoded_jwt
 

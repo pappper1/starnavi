@@ -1,6 +1,7 @@
+import io
+
 from fastapi import UploadFile
 from PIL import Image
-import io
 
 
 def is_image(file: UploadFile) -> bool:
