@@ -9,6 +9,7 @@ from app.exceptions import (
     AccessForbiddenException,
     FileNotAnImageException,
     PostNotFoundException,
+    FoulLanguageException
 )
 from app.post.repository import PostRepository
 from app.post.schemas import SPost, SPostUpdate
@@ -35,7 +36,7 @@ async def create_post(
             title=title, content=content, author_id=user.id, is_blocked=True
         )
 
-        return {"message": "Profanity detected. Post was blocked."}
+        raise FoulLanguageException
 
     if not file is None:
         if not is_image(file):
@@ -90,7 +91,7 @@ async def update_post(
         raise AccessForbiddenException
 
     if await chat_gpt.profanity_check(title=title, content=content):
-        return {"message": "Profanity detected"}
+        raise FoulLanguageException
 
     post_data = SPostUpdate(title=title, content=content)
 

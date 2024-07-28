@@ -78,3 +78,9 @@ class AnalyticsNotFoundException(BaseException):
 
     status_code = status.HTTP_404_NOT_FOUND
     detail = "Analytics not found"
+
+
+class FoulLanguageException(BaseException):
+
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Foul language is not allowed"

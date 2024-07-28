@@ -7,6 +7,7 @@ from app.exceptions import (
     AnalyticsNotFoundException,
     CommentNotFoundException,
     PostNotFoundException,
+    FoulLanguageException
 )
 from app.post.comment.repository import CommentRepository
 from app.post.comment.schemas import SComment, SCommentCreate, SCommentsBreakdown
@@ -38,7 +39,7 @@ async def create_comment(
             is_blocked=True,
         )
 
-        return {"message": "Profanity detected. Comment was blocked."}
+        raise FoulLanguageException
 
     new_comment = await CommentRepository.add(
         **comment_data.model_dump(), author_id=user.id
@@ -88,7 +89,7 @@ async def update_comment(
         raise AccessForbiddenException
 
     if await chat_gpt.profanity_check(content=content):
-        return {"message": "Profanity detected."}
+        raise FoulLanguageException
 
     updated_comment = await CommentRepository.update(comment_id, content=content)
 
