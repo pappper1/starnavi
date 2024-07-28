@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from pydantic import BaseModel, EmailStr
 
@@ -15,3 +15,9 @@ class SComment(BaseModel):
 class SCommentCreate(BaseModel):
 	content: str
 	post_id: int
+
+
+class SCommentsBreakdown(BaseModel):
+	created_comments: int
+	blocked_comments: int
+	day: date

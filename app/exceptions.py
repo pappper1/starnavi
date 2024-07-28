@@ -66,3 +66,15 @@ class AccessForbiddenException(BaseException):
 
 	status_code=status.HTTP_403_FORBIDDEN
 	detail="Access forbidden"
+
+
+class CommentNotFoundException(BaseException):
+
+	status_code=status.HTTP_404_NOT_FOUND
+	detail="Comment not found"
+
+
+class AnalyticsNotFoundException(BaseException):
+
+	status_code=status.HTTP_404_NOT_FOUND
+	detail="Analytics not found"

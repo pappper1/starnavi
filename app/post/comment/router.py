@@ -1,15 +1,16 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from fastapi import APIRouter, Depends
 
 from app.exceptions import (
 	PostNotFoundException,
 	CommentNotFoundException,
-	AccessForbiddenException
+	AccessForbiddenException,
+	AnalyticsNotFoundException,
 )
 from app.post.comment.repository import CommentDAO
 from app.post.repository import PostDAO
-from app.post.comment.schemas import SComment, SCommentCreate
+from app.post.comment.schemas import SComment, SCommentCreate, SCommentsBreakdown
 from app.user.dependencies import get_current_user
 from app.user.models import User
 from app.services.ai.chat_gpt import chat_gpt
@@ -107,3 +108,14 @@ async def delete_comment(
 	await CommentDAO.delete(id=comment_id)
 
 	return {"message": "Comment was deleted."}
+
+
+@router.get("/daily-breakdown")
+async def daily_comments_breakdown(
+		date_from: date, date_to: date, user: User = Depends(get_current_user)
+) -> list[SCommentsBreakdown]:
+	analytics = await CommentDAO.find_comment_analytics(date_from, date_to)
+	if not analytics:
+		raise AnalyticsNotFoundException
+
+	return analytics
