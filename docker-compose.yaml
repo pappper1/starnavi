@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16
-    container_name: db
+    container_name: starnavi_db
     volumes:
       - postgresdata:/var/lib/postgresql/data
     env_file:
@@ -12,7 +12,7 @@ services:
   api:
     build:
       context: .
-    container_name: api
+    container_name: starnavi_api
     volumes:
       - apidata:/app
     env_file:
