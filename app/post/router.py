@@ -59,7 +59,7 @@ async def create_post(
 
 
 @router.get("/read/{post_id}")
-async def read_post(post_id: int, user: User = Depends(get_current_user)) -> SPost:
+async def read_post(post_id: int) -> SPost:
     post = await PostRepository.find_by_id(post_id)
     if not post:
         raise PostNotFoundException

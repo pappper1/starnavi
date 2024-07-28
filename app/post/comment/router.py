@@ -57,9 +57,7 @@ async def create_comment(
 
 
 @router.get("/read/{comment_id}")
-async def read_comment(
-    comment_id: int, user: User = Depends(get_current_user)
-) -> SComment | dict:
+async def read_comment(comment_id: int) -> SComment | dict:
     comment = await CommentRepository.find_by_id(comment_id)
     if not comment:
         raise CommentNotFoundException
@@ -68,9 +66,7 @@ async def read_comment(
 
 
 @router.get("/read-all/{post_id}")
-async def read_all_post_comments(
-    post_id: int, user: User = Depends(get_current_user)
-) -> list[SComment]:
+async def read_all_post_comments(post_id: int) -> list[SComment]:
     comments = await CommentRepository.find_all(post_id=post_id)
     if not comments:
         raise CommentNotFoundException
