@@ -59,10 +59,10 @@ async def get_user(current_user: User = Depends(get_current_user)) -> SUser:
 
 @router.put("/update")
 async def update_user(
-		user_data: SUserUpdate, current_user: User = Depends(get_current_user)
+		user_data: SUserUpdate, user: User = Depends(get_current_user)
 ) -> SUser:
 	updated_user = await UserDAO.update(
-		current_user.id, **user_data.dict(exclude_unset=True)
+		user.id, **user_data.dict(exclude_unset=True)
 	)
 
 	return updated_user
