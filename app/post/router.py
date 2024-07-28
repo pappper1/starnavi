@@ -29,7 +29,9 @@ async def create_post(
 		user: User = Depends(get_current_user)
 ) -> SPost | dict:
 	if await chat_gpt.profanity_check(title=title, content=content):
-		return {"message": "Profanity detected"}
+		await PostDAO.add(title=title, content=content, author_id=user.id, is_blocked=True)
+
+		return {"message": "Profanity detected. Post was blocked."}
 
 	if not file is None:
 		if not is_image(file):
