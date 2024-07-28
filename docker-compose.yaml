@@ -20,7 +20,8 @@ services:
     ports:
       - "7777:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     command: ["/starnavi/docker/app.sh"]
 
 volumes:
