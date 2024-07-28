@@ -39,7 +39,7 @@ async def create_post(
         raise FoulLanguageException
 
     if not file is None:
-        if not is_image(file):
+        if not await is_image(file):
             raise FileNotAnImageException
 
         uuid4 = uuid.uuid4()
@@ -96,7 +96,7 @@ async def update_post(
     post_data = SPostUpdate(title=title, content=content)
 
     if not file is None:
-        if not is_image(file):
+        if not await is_image(file):
             raise FileNotAnImageException
 
         if post.photo_uid:

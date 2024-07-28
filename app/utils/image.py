@@ -4,7 +4,7 @@ from fastapi import UploadFile
 from PIL import Image
 
 
-def is_image(file: UploadFile) -> bool:
+async def is_image(file: UploadFile) -> bool:
     try:
         image = Image.open(io.BytesIO(file.file.read()))
         image.verify()
