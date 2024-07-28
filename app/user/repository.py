@@ -1,6 +1,6 @@
-from app.repository.base import BaseDAO
+from app.repository.base import BaseRepository
 from app.user.models import User
 
 
-class UserDAO(BaseDAO):
+class UserRepository(BaseRepository):
 	model = User

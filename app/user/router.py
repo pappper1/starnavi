@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Response
 
 from app.user.auth import get_password_hash, authenticate_user, create_access_token
 from app.user.dependencies import get_current_user
-from app.user.repository import UserDAO
+from app.user.repository import UserRepository
 from app.user.models import User
 from app.user.schemas import SUserAuth, SUser, SUserUpdate
 from app.exceptions import (
@@ -19,12 +19,12 @@ router = APIRouter(
 
 @router.post("/signup")
 async def register_user(user_data: SUserAuth) -> dict:
-	existing_user = await UserDAO.find_one_or_none(email=user_data.email)
+	existing_user = await UserRepository.find_one_or_none(email=user_data.email)
 	if existing_user:
 		raise UserAlreadyExistsException
 
 	hashed_password = get_password_hash(user_data.password)
-	await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
+	await UserRepository.add(email=user_data.email, hashed_password=hashed_password)
 
 	return {"message": "User created successfully"}
 
@@ -50,7 +50,7 @@ async def logout_user(response: Response):
 
 @router.get("/me")
 async def get_user(current_user: User = Depends(get_current_user)) -> SUser:
-	user = await UserDAO.find_one_or_none(id=current_user.id)
+	user = await UserRepository.find_one_or_none(id=current_user.id)
 	if not user:
 		raise UserNotFoundException
 
@@ -61,7 +61,7 @@ async def get_user(current_user: User = Depends(get_current_user)) -> SUser:
 async def update_user(
 		user_data: SUserUpdate, user: User = Depends(get_current_user)
 ) -> SUser:
-	updated_user = await UserDAO.update(
+	updated_user = await UserRepository.update(
 		user.id, **user_data.dict(exclude_unset=True)
 	)
 

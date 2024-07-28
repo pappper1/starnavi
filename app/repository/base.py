@@ -3,7 +3,7 @@ from sqlalchemy import delete, insert, select, update
 from app.database import async_session_maker
 
 
-class BaseDAO:
+class BaseRepository:
 	model = None
 
 	@classmethod

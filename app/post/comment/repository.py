@@ -3,12 +3,12 @@ from datetime import date
 from sqlalchemy import func, select, cast, Date
 
 from app.logger import logger
-from app.repository.base import BaseDAO
+from app.repository.base import BaseRepository
 from app.post.comment.models import Comment
 from app.database import async_session_maker
 
 
-class CommentDAO(BaseDAO):
+class CommentRepository(BaseRepository):
 	model = Comment
 
 	@classmethod

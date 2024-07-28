@@ -10,7 +10,7 @@ from app.exceptions import (
     TokenAbsentException,
     UserIsNotPresentException,
 )
-from app.user.repository import UserDAO
+from app.user.repository import UserRepository
 
 
 def get_token(request: Request):
@@ -35,7 +35,7 @@ async def get_current_user(token: str = Depends(get_token)):
 	if not user_id:
 		raise UserIsNotPresentException
 
-	user = await UserDAO.find_by_id(int(user_id))
+	user = await UserRepository.find_by_id(int(user_id))
 	if not user:
 		raise UserIsNotPresentException
 

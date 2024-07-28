@@ -6,7 +6,7 @@ from typing import Union
 from fastapi import APIRouter, Depends, UploadFile, Form
 from PIL import Image
 
-from app.post.repository import PostDAO
+from app.post.repository import PostRepository
 from app.post.schemas import SPost, SPostUpdate
 from app.user.dependencies import get_current_user
 from app.user.models import User
@@ -29,7 +29,7 @@ async def create_post(
 		user: User = Depends(get_current_user)
 ) -> SPost | dict:
 	if await chat_gpt.profanity_check(title=title, content=content):
-		await PostDAO.add(title=title, content=content, author_id=user.id, is_blocked=True)
+		await PostRepository.add(title=title, content=content, author_id=user.id, is_blocked=True)
 
 		return {"message": "Profanity detected. Post was blocked."}
 
@@ -44,18 +44,18 @@ async def create_post(
 			image = image.convert("RGB")
 		image.save(image_path)
 
-		post = await PostDAO.add(
+		post = await PostRepository.add(
 			title=title, content=content, author_id=user.id, photo_uid=str(uuid4)
 		)
 	else:
-		post = await PostDAO.add(title=title, content=content, author_id=user.id)
+		post = await PostRepository.add(title=title, content=content, author_id=user.id)
 
 	return post
 
 
 @router.get("/read/{post_id}")
 async def read_post(post_id: int, user: User = Depends(get_current_user)) -> SPost:
-	post = await PostDAO.find_by_id(post_id)
+	post = await PostRepository.find_by_id(post_id)
 	if not post:
 		raise PostNotFoundException
 
@@ -64,7 +64,7 @@ async def read_post(post_id: int, user: User = Depends(get_current_user)) -> SPo
 
 @router.get("/read-all")
 async def read_all_user_posts(user: User = Depends(get_current_user)) -> list[SPost]:
-	posts = await PostDAO.find_all(author_id=user.id)
+	posts = await PostRepository.find_all(author_id=user.id)
 	if not posts:
 		raise PostNotFoundException
 
@@ -79,7 +79,7 @@ async def update_post(
 		file: Union[UploadFile, None] = None,
 		user: User = Depends(get_current_user)
 ) -> SPost | dict:
-	post = await PostDAO.find_by_id(post_id)
+	post = await PostRepository.find_by_id(post_id)
 	if not post:
 		raise PostNotFoundException
 	elif post.author_id != user.id:
@@ -106,11 +106,11 @@ async def update_post(
 			image = image.convert("RGB")
 		image.save(image_path)
 
-		updated_post = await PostDAO.update(
+		updated_post = await PostRepository.update(
 			post_id, **post_data.dict(exclude_unset=True)
 		)
 	else:
-		updated_post = await PostDAO.update(
+		updated_post = await PostRepository.update(
 			post_id, **post_data.dict(exclude_unset=True)
 		)
 
@@ -119,7 +119,7 @@ async def update_post(
 
 @router.delete("/delete/{post_id}")
 async def delete_post(post_id: int, user: User = Depends(get_current_user)) -> dict:
-	post = await PostDAO.find_by_id(post_id)
+	post = await PostRepository.find_by_id(post_id)
 	if not post:
 		raise PostNotFoundException
 	elif post.author_id != user.id:
@@ -130,6 +130,6 @@ async def delete_post(post_id: int, user: User = Depends(get_current_user)) -> d
 		if os.path.exists(image_path):
 			os.remove(image_path)
 
-	await PostDAO.delete(id=post_id)
+	await PostRepository.delete(id=post_id)
 
 	return {"message": "Post deleted successfully"}

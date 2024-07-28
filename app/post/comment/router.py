@@ -8,8 +8,8 @@ from app.exceptions import (
 	AccessForbiddenException,
 	AnalyticsNotFoundException,
 )
-from app.post.comment.repository import CommentDAO
-from app.post.repository import PostDAO
+from app.post.comment.repository import CommentRepository
+from app.post.repository import PostRepository
 from app.post.comment.schemas import SComment, SCommentCreate, SCommentsBreakdown
 from app.user.dependencies import get_current_user
 from app.user.models import User
@@ -27,12 +27,12 @@ router = APIRouter(
 async def create_comment(
 		comment_data: SCommentCreate, user: User = Depends(get_current_user)
 ) -> SComment | dict:
-	post = await PostDAO.find_by_id(comment_data.post_id)
+	post = await PostRepository.find_by_id(comment_data.post_id)
 	if not post:
 		raise PostNotFoundException
 
 	if await chat_gpt.profanity_check(content=comment_data.content):
-		await CommentDAO.add(
+		await CommentRepository.add(
 			content=comment_data.content,
 			author_id=user.id,
 			post_id=comment_data.post_id,
@@ -41,7 +41,7 @@ async def create_comment(
 
 		return {"message": "Profanity detected. Comment was blocked."}
 
-	new_comment = await CommentDAO.add(**comment_data.model_dump(), author_id=user.id)
+	new_comment = await CommentRepository.add(**comment_data.model_dump(), author_id=user.id)
 	if post.author.is_ai_answer_comments:
 		scheduler.add_job(
 			SchedulerTasks.ai_answer_comment,
@@ -59,7 +59,7 @@ async def create_comment(
 async def read_comment(
 		comment_id: int, user: User = Depends(get_current_user)
 ) -> SComment | dict:
-	comment = await CommentDAO.find_by_id(comment_id)
+	comment = await CommentRepository.find_by_id(comment_id)
 	if not comment:
 		raise CommentNotFoundException
 
@@ -70,7 +70,7 @@ async def read_comment(
 async def read_all_post_comments(
 		post_id: int, user: User = Depends(get_current_user)
 ) -> list[SComment]:
-	comments = await CommentDAO.find_all(post_id=post_id)
+	comments = await CommentRepository.find_all(post_id=post_id)
 	if not comments:
 		raise CommentNotFoundException
 
@@ -81,7 +81,7 @@ async def read_all_post_comments(
 async def update_comment(
 		comment_id: int, content: str, user: User = Depends(get_current_user)
 ) -> SComment | dict:
-	comment = await CommentDAO.find_by_id(comment_id)
+	comment = await CommentRepository.find_by_id(comment_id)
 	if not comment:
 		raise CommentNotFoundException
 	if comment.author_id != user.id:
@@ -90,7 +90,7 @@ async def update_comment(
 	if await chat_gpt.profanity_check(content=content):
 		return {"message": "Profanity detected."}
 
-	updated_comment = await CommentDAO.update(comment_id, content=content)
+	updated_comment = await CommentRepository.update(comment_id, content=content)
 
 	return updated_comment
 
@@ -99,13 +99,13 @@ async def update_comment(
 async def delete_comment(
 		comment_id: int, user: User = Depends(get_current_user)
 ) -> dict:
-	comment = await CommentDAO.find_by_id(comment_id)
+	comment = await CommentRepository.find_by_id(comment_id)
 	if not comment:
 		raise CommentNotFoundException
 	if comment.author_id != user.id:
 		raise AccessForbiddenException
 
-	await CommentDAO.delete(id=comment_id)
+	await CommentRepository.delete(id=comment_id)
 
 	return {"message": "Comment was deleted."}
 
@@ -114,7 +114,7 @@ async def delete_comment(
 async def daily_comments_breakdown(
 		date_from: date, date_to: date, user: User = Depends(get_current_user)
 ) -> list[SCommentsBreakdown]:
-	analytics = await CommentDAO.find_comment_analytics(date_from, date_to)
+	analytics = await CommentRepository.find_comment_analytics(date_from, date_to)
 	if not analytics:
 		raise AnalyticsNotFoundException
 
