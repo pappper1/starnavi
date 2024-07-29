@@ -7,11 +7,11 @@ class AsyncPgClient:
 	@staticmethod
 	async def connect():
 		return await asyncpg.connect(
-			user=settings.TEST_DB_USER,
-			password=settings.TEST_DB_PASS,
+			user=settings.DB_USER,
+			password=settings.DB_PASS,
 			database=settings.DB_NAME,
-			host=settings.TEST_DB_HOST,
-			port=settings.TEST_DB_PORT
+			host=settings.DB_HOST,
+			port=settings.DB_PORT
 		)
 
 	@classmethod
