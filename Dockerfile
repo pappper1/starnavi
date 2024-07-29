@@ -14,6 +14,4 @@ COPY . .
 
 RUN chmod a+x /starnavi/docker/app.sh
 
-RUN alembic upgrade head
-
 CMD ["gunicorn", "app.main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind=0.0.0.0:8000"]
