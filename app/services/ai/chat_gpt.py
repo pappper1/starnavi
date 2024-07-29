@@ -6,6 +6,7 @@ from app.config import settings
 class ChatGPT:
     def __init__(self):
         self.client = AsyncOpenAI(api_key=settings.OPENAI_KEY)
+        self.model = "gpt-4o-mini"
 
     async def profanity_check(
         self, title: str | None = "Default", content: str | None = "Default"
@@ -23,7 +24,7 @@ class ChatGPT:
             "Check very carefully."
         )
         response = await self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=self.model,
             messages=[
                 {
                     "role": "assistant",
@@ -59,7 +60,7 @@ class ChatGPT:
             "The reply should be in the same language as the comment."
         )
         response = await self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=self.model,
             messages=[
                 {
                     "role": "user",
