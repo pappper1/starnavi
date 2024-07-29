@@ -67,7 +67,7 @@ async def read_post(post_id: int) -> SPost:
     return post
 
 
-@router.get("/read-all")
+@router.get("/read-all-my-posts")
 async def read_all_user_posts(user: User = Depends(get_current_user)) -> list[SPost]:
     posts = await PostRepository.find_all(author_id=user.id)
     if not posts:
