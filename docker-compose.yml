@@ -27,7 +27,7 @@ services:
     image: nginx:latest
     container_name: starnavi_nginx
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/:/etc/nginx/
     ports:
       - "80:80"
     depends_on:
