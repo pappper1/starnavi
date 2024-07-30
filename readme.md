@@ -1,3 +1,7 @@
+# TRY IT OUT
+
+## [API Documentation](http://paperworld.site/docs)
+
 # Project Deployment Guide
 
 ## Prerequisites
