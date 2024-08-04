@@ -1,5 +1,6 @@
 import os
 import uuid
+from datetime import datetime
 from typing import Union
 
 from fastapi import APIRouter, Depends, Form, UploadFile
@@ -33,7 +34,11 @@ async def create_post(
 ) -> SPost | dict:
     if await chat_gpt.profanity_check(title=title, content=content):
         await PostRepository.add(
-            title=title, content=content, author_id=user.id, is_blocked=True
+            title=title,
+            content=content,
+            author_id=user.id,
+            is_blocked=True,
+            created_at=datetime.now()
         )
 
         raise FoulLanguageException
@@ -50,10 +55,16 @@ async def create_post(
         image.save(image_path)
 
         post = await PostRepository.add(
-            title=title, content=content, author_id=user.id, photo_uid=str(uuid4)
+            title=title,
+            content=content,
+            author_id=user.id,
+            photo_uid=str(uuid4),
+            created_at=datetime.now()
         )
     else:
-        post = await PostRepository.add(title=title, content=content, author_id=user.id)
+        post = await PostRepository.add(
+            title=title, content=content, author_id=user.id, created_at=datetime.now()
+        )
 
     return post
 

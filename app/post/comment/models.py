@@ -21,7 +21,7 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey("post.id"), nullable=False)
     author_id = Column(Integer, ForeignKey("user.id"), nullable=True)
     is_blocked = Column(Boolean, default=False, nullable=False)
-    created_at = Column(DateTime, default=datetime.now(), nullable=False)
+    created_at = Column(DateTime, nullable=False)
 
     post = relationship("Post", back_populates="comments")
     author = relationship("User", back_populates="comments")

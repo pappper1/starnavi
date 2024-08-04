@@ -21,7 +21,7 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_ai_answer_comments = Column(Boolean, default=False)
     comments_ai_answer_delay = Column(Integer, default=5)  # in seconds
-    signup_date = Column(DateTime, default=datetime.now(), nullable=False)
+    signup_date = Column(DateTime, nullable=False)
 
     posts = relationship("Post", back_populates="author")
     comments = relationship("Comment", back_populates="author")

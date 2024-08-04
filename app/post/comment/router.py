@@ -37,12 +37,13 @@ async def create_comment(
             author_id=user.id,
             post_id=comment_data.post_id,
             is_blocked=True,
+            created_at=datetime.now()
         )
 
         raise FoulLanguageException
 
     new_comment = await CommentRepository.add(
-        **comment_data.model_dump(), author_id=user.id
+        **comment_data.model_dump(), author_id=user.id, created_at=datetime.now()
     )
     if post.author.is_ai_answer_comments:
         scheduler.add_job(

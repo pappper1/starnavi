@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app.post.comment.repository import CommentRepository
 from app.services.ai.chat_gpt import chat_gpt
 
@@ -14,4 +16,6 @@ class SchedulerTasks:
             comment_content=comment_content,
         )
 
-        await CommentRepository.add(content=ai_answer, post_id=post_id)
+        await CommentRepository.add(
+            content=ai_answer, post_id=post_id, created_at=datetime.now()
+        )

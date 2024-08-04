@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, Response
 
 from app.exceptions import (
@@ -24,7 +26,11 @@ async def register_user(user_data: SUserAuth) -> dict:
         raise UserAlreadyExistsException
 
     hashed_password = get_password_hash(user_data.password)
-    await UserRepository.add(email=user_data.email, hashed_password=hashed_password)
+    await UserRepository.add(
+        email=user_data.email,
+        hashed_password=hashed_password,
+        signup_date=datetime.now()
+    )
 
     return {"message": "User created successfully"}
 

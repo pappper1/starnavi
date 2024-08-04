@@ -23,7 +23,7 @@ class Post(Base):
     photo_uid = Column(String, nullable=True)
     author_id = Column(Integer, ForeignKey("user.id"))
     is_blocked = Column(Boolean, default=False, nullable=False)
-    created_at = Column(DateTime, default=datetime.now(), nullable=False)
+    created_at = Column(DateTime, nullable=False)
 
     author = relationship("User", back_populates="posts", lazy="joined")
     comments = relationship(
